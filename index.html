@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Lead Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="h-left">
+    <h1>📋 Lead Manager</h1>
+    <p><span id="totalCount">0</span> leads · <span id="locCount">0</span> locations</p>
+  </div>
+  <div class="h-right">
+    <button class="btn-icon" onclick="toggleDark()" title="Dark mode">🌙</button>
+    <button class="btn-export" onclick="exportCSV()">⬇ CSV</button>
+    <button class="btn-add" onclick="openAdd()">+ Add</button>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat-card red"><div class="num" id="cNot">0</div><div class="lbl">🔴 Not Contacted</div></div>
+  <div class="stat-card green"><div class="num" id="cInt">0</div><div class="lbl">🟢 Interested</div></div>
+  <div class="stat-card blue"><div class="num" id="cMtg">0</div><div class="lbl">🔵 Meeting</div></div>
+  <div class="stat-card gold"><div class="num" id="cCli">0</div><div class="lbl">💰 Closed</div></div>
+  <div class="stat-card gold"><div class="num" id="convRate">0%</div><div class="lbl">📈 Conversion</div></div>
+  <div class="stat-card gold"><div class="num" id="totalRev">₹0</div><div class="lbl">💰 Revenue</div></div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="Search…" oninput="render()">
+  </div>
+  <select class="filter-select" id="locFilter" onchange="render()">
+    <option value="all">📍 All</option>
+  </select>
+  <select class="filter-select" id="statusFilter" onchange="render()">
+    <option value="all">All</option>
+    <option value="not">🔴 Not Contacted</option>
+    <option value="int">🟢 Interested</option>
+    <option value="mtg">🔵 Meeting</option>
+    <option value="cli">💰 Closed</option>
+  </select>
+  <button class="filter-select" id="archiveToggle" onclick="toggleShowArchived()" style="padding:9px 10px;background:var(--card);border:1.5px solid var(--border);border-radius:8px;font-size:.72rem;font-weight:500;color:var(--text);cursor:pointer">Show Archived</button>
+</div>
+
+<div class="import-section">
+  <label for="importFile">📥 Import CSV</label>
+  <input type="file" id="importFile" accept=".csv" onchange="importCSV(event)">
+</div>
+
+<div class="list" id="list"></div>
+
+<div class="overlay" id="modal">
+  <div class="modal">
+    <h2 id="modalTitle">Add Lead</h2>
+    <label>Business Name *</label>
+    <input type="text" id="fName" placeholder="e.g. The Champion Gym">
+    <label>Category *</label>
+    <input type="text" id="fCat" placeholder="e.g. Gym, Salon, Cafe">
+    <label>Location *</label>
+    <input type="text" id="fLoc" placeholder="e.g. Ara, Patna">
+    <label>Phone</label>
+    <input type="text" id="fPh" placeholder="+91 9XXXXXXXXX">
+    <div class="modal-actions">
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-modal-primary" onclick="saveLead()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
