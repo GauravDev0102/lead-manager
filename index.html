@@ -6,7 +6,8 @@
 <title>Lead Manager</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
 </head>
 <body>
 
@@ -49,8 +50,8 @@
 </div>
 
 <div class="import-section">
-  <label for="importFile">📥 Import CSV</label>
-  <input type="file" id="importFile" accept=".csv" onchange="importCSV(event)">
+  <label for="importFile">📥 Import File</label>
+  <input type="file" id="importFile" accept=".csv,.txt,.xlsx" onchange="importFile(event)">
 </div>
 
 <div class="list" id="list"></div>

@@ -270,25 +270,46 @@ function exportCSV() {
   document.body.appendChild(a); a.click(); a.remove();
 }
 
-function importCSV(e) {
+function importFile(e) {
   const file = e.target.files[0];
   if (!file) return;
+  const ext = file.name.split('.').pop().toLowerCase();
   const reader = new FileReader();
-  reader.onload = function(ev) {
-    const lines = ev.target.result.split('\n').map(l => l.trim()).filter(Boolean);
-    let added = 0;
-    lines.forEach(line => {
-      const parts = line.split(',').map(p => p.trim().replace(/^"(.*)"$/, '$1'));
-      if (parts.length >= 3) {
-        leads.push({ n: parts[0], cat: parts[1], loc: parts[2], ph: parts[3] || '' });
-        added++;
-      }
-    });
-    saveLeads(leads);
-    render();
-    alert('Imported ' + added + ' leads.');
-  };
-  reader.readAsText(file);
+  if (ext === 'xlsx') {
+    reader.onload = function(ev) {
+      const data = new Uint8Array(ev.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+      let added = 0;
+      rows.forEach(row => {
+        if (row.length >= 3 && row[0]) {
+          leads.push({ n: String(row[0]).trim(), cat: String(row[1] || '').trim(), loc: String(row[2] || '').trim(), ph: String(row[3] || '').trim() });
+          added++;
+        }
+      });
+      if (added) { saveLeads(leads); render(); }
+      alert('Imported ' + added + ' leads from Excel.');
+    };
+    reader.readAsArrayBuffer(file);
+  } else {
+    reader.onload = function(ev) {
+      const text = ev.target.result;
+      const delim = ext === 'csv' ? ',' : (text.includes('\t') ? '\t' : ',');
+      const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+      let added = 0;
+      lines.forEach(line => {
+        const parts = line.split(delim).map(p => p.trim().replace(/^"(.*)"$/, '$1'));
+        if (parts.length >= 3 && parts[0]) {
+          leads.push({ n: parts[0], cat: parts[1], loc: parts[2], ph: parts[3] || '' });
+          added++;
+        }
+      });
+      if (added) { saveLeads(leads); render(); }
+      alert('Imported ' + added + ' leads.');
+    };
+    reader.readAsText(file);
+  }
   e.target.value = '';
 }
 
